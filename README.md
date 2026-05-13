@@ -1,275 +1,312 @@
 # Developer Framework — Ander Fernández
 
-> A practical software development operating system for building faster with AI agents, reusable architecture, clear issues, controlled context, and small verifiable pull requests.
+<p align="center">
+  <img src="https://img.shields.io/badge/AI%20Assisted-Development-black?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi" />
+  <img src="https://img.shields.io/badge/React-Frontend-61DAFB?style=for-the-badge&logo=react&logoColor=black" />
+  <img src="https://img.shields.io/badge/PostgreSQL-Database-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" />
+  <img src="https://img.shields.io/badge/Docker-Infra-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
+</p>
 
-This repository documents how I work as a technical product/data/AI builder: from rough ideas to GitHub issues, from issues to agent-executed branches, from branches to reviewed pull requests, and from experiments to reusable software foundations.
+<p align="center">
+  <b>A practical operating system for building software with AI agents, reusable architecture, token discipline and small verifiable pull requests.</b>
+</p>
 
-It is not a theoretical framework. It is the result of iterating on real projects: analytics platforms, OCR pipelines, transcription tools, SaaS prototypes, internal automation, authenticated dashboards, and self-hosted services.
-
----
-
-## Why this exists
-
-I found myself starting several software projects with the same repeated needs:
-
-- Authentication.
-- Users.
-- Roles and permissions.
-- Admin panel.
-- PostgreSQL.
-- API layer.
-- Docker.
-- Reusable frontend layout.
-- Clear development process.
-- AI-assisted coding without losing control of the repository.
-
-The problem was not only technical. The problem was operational.
-
-AI coding tools are powerful, but without a system they tend to assume too much, over-engineer simple tasks, touch unrelated files, burn context and tokens, generate large diffs, and forget architectural decisions from one session to the next.
-
-This repo is my answer to that.
+<p align="center">
+  <a href="#the-core-workflow">Workflow</a> ·
+  <a href="#my-stack">Stack</a> ·
+  <a href="#agents">Agents</a> ·
+  <a href="#skills">Skills</a> ·
+  <a href="#token-optimization">Token Optimization</a> ·
+  <a href="#learning-process">Learning Process</a>
+</p>
 
 ---
 
-## The core idea
+## What is this?
 
-```text
-Rough idea
-   ↓
-Structured issue
-   ↓
-Small scoped task
-   ↓
-Agent reads AGENTS.md / CODEX.md
-   ↓
-Branch
-   ↓
-Minimal implementation
-   ↓
-Tests / verification
-   ↓
-Pull request
-   ↓
-Human review
-   ↓
-Merge
+This repository explains how I build software with a mix of product thinking, data/AI background, backend/frontend development and AI-assisted coding tools.
+
+It is not a theoretical framework.
+
+It is the result of iterating through real projects:
+
+- Basketball analytics platforms.
+- OCR and invoice extraction systems.
+- Transcription and diarization tools.
+- WhatsApp automation prototypes.
+- Internal dashboards.
+- SaaS-style apps.
+- Dockerized VPS services.
+- Authenticated admin panels.
+- AI-assisted development workflows.
+
+The purpose is simple:
+
+> Build faster without losing control of the codebase.
+
+---
+
+## Why I built this
+
+When you build several projects in parallel, the same foundations appear again and again:
+
+| Repeated need | Typical problem |
+|---|---|
+| Authentication | Rebuilding login every time |
+| Users and permissions | Repeating role logic |
+| Admin panel | Creating backoffice screens from scratch |
+| Database | Repeating SQLAlchemy/Alembic setup |
+| Docker | Reinventing local/dev deployment |
+| AI agents | Giving the same instructions over and over |
+| Context | Burning tokens with full-repo prompts |
+| Issues | Asking AI for code before defining the task |
+
+This repo turns that repetition into a system.
+
+---
+
+## The core workflow
+
+```mermaid
+flowchart LR
+    A[Raw idea] --> B[Structured GitHub issue]
+    B --> C[Agent reads AGENTS.md / CODEX.md]
+    C --> D[Small scoped branch]
+    D --> E[Minimal implementation]
+    E --> F[Tests and verification]
+    F --> G[Pull request]
+    G --> H[Human review]
+    H --> I[Merge]
 ```
 
-> Turn AI coding from a chaotic chat loop into a repeatable development workflow.
+The important shift:
+
+```diff
+- Ask AI to build random things from vague prompts
++ Give agents scoped issues, rules, context and acceptance criteria
+```
 
 ---
 
-## My development principles
+## My operating principles
 
-This framework is aligned with practical LLM coding guidelines: think before coding, keep solutions simple, make surgical changes, and define success criteria before implementation.
+```mermaid
+mindmap
+  root((AI-assisted development))
+    Think before coding
+      Assumptions
+      Risks
+      Plan
+      Acceptance criteria
+    Simplicity first
+      Minimum viable solution
+      No speculative abstractions
+      No unnecessary dependencies
+    Surgical changes
+      Touch only required files
+      No unrelated refactors
+      No formatting noise
+    Goal-driven execution
+      Tests
+      Verification
+      PR checklist
+```
 
 ### 1. Think before coding
 
-Before implementing anything non-trivial, the agent must explain:
+Before implementation, the agent must state:
 
 - Objective understood.
 - Assumptions.
-- Ambiguities.
 - Risks.
-- Files it expects to touch.
-- Criteria of acceptance.
-
-No hidden guessing.
+- Minimal plan.
+- Files to touch.
+- Acceptance criteria.
 
 ### 2. Simplicity first
 
-The best solution is usually the smallest one that works.
-
-Avoid premature abstractions, generic frameworks for one use case, unnecessary configuration, refactors mixed with features, and overbuilt APIs.
+The best implementation is usually the smallest one that solves the current issue.
 
 ### 3. Surgical changes
 
 Every changed line should map back to the issue.
 
-Do not reformat unrelated files, improve adjacent code, rename things casually, delete old code unless the issue asks for it, or touch authentication/database/deployment unless required.
-
 ### 4. Goal-driven execution
 
-Agents work better when they are given verifiable outcomes instead of vague commands.
-
-Bad:
-
-```text
-Add validation.
-```
-
-Better:
-
-```text
-Add validation so that invalid invoice dates return 422.
-Add tests for missing date, invalid format and future date.
-```
+No vague “make it work”. Every task needs verifiable success criteria.
 
 ---
 
-## My default stack
+## My stack
 
-### Backend
+### Product / engineering profile
 
-- Python.
-- FastAPI.
-- SQLAlchemy 2.x.
-- Alembic.
-- PostgreSQL.
-- Pydantic Settings.
-- Authlib / PyJWT for OIDC.
-- Uvicorn.
-- Pytest.
-
-### Frontend
-
-- React.
-- Vite.
-- TypeScript.
-- React Router.
-- TanStack Query.
-- Tailwind CSS.
-- shadcn/ui.
-- React Hook Form.
-- Zod.
-
-### Auth
-
-- OIDC-first.
-- Azure Entra ID / Azure AD.
-- Google.
-- Keycloak.
-- External OIDC providers.
-- Internal user table separated from external identity.
-
-### Admin
-
-- SQLAdmin first.
-- React Admin only when a richer backoffice is justified.
-
-### Database
-
-- PostgreSQL by default.
-- SQLite only for local prototypes or analytical pipelines where it makes sense.
-- Alembic from day one.
-- Idempotent seeds.
-
-### Infra
-
-- Docker Compose.
-- VPS deployments.
-- Cloudflare / reverse proxy where useful.
-- `.env.example` always updated.
-- No secrets committed.
-
-### AI workflow
-
-- GitHub Issues as work units.
-- Codex / Cursor / Claude Code / ChatGPT as execution assistants.
-- Repomix / Gitingest for context optimization.
-- AGENTS.md as the repo-level instruction layer.
-
----
-
-## The reusable app starter
-
-Most new apps I build need the same foundation:
+I work at the intersection of:
 
 ```text
-FastAPI
-SQLAlchemy
-PostgreSQL
-Alembic
-React
-OIDC auth
-Internal users
-Roles and permissions
-SQLAdmin
-Audit log
-Feature flags
-Docker Compose
+Product thinking
+        +
+Data / AI
+        +
+Backend engineering
+        +
+Frontend delivery
+        +
+Automation / self-hosting
 ```
 
-The starter architecture includes:
+### Preferred technical stack
 
-- `User`
-- `ExternalIdentity`
-- `Organization`
-- `Membership`
-- `Role`
-- `Permission`
-- `RolePermission`
-- `UserRole`
-- `AppProject`
-- `AppSetting`
-- `FeatureFlag`
-- `AuditLog`
-
-This means I do not need to re-explain the same base architecture every time I start a new product.
+| Layer | Default choice |
+|---|---|
+| Backend | FastAPI |
+| ORM | SQLAlchemy 2.x |
+| Migrations | Alembic |
+| Database | PostgreSQL |
+| Frontend | React + Vite + TypeScript |
+| UI | Tailwind CSS + shadcn/ui |
+| Server state | TanStack Query |
+| Forms | React Hook Form + Zod |
+| Auth | OIDC |
+| Providers | Azure Entra ID, Google, Keycloak |
+| Admin | SQLAdmin first |
+| Infra | Docker Compose |
+| Deploy | VPS / reverse proxy / Cloudflare when useful |
+| AI context | Repomix / Gitingest |
+| Work units | GitHub Issues + Pull Requests |
 
 ---
 
-## How I use AI agents
+## Reusable app starter
 
-AI agents should not be treated as magical senior engineers with infinite context. They should be treated as fast executors with strong guardrails.
+Most apps I build need the same base:
 
-The agent must always know:
+```mermaid
+flowchart TD
+    A[Frontend: React + Vite] --> B[Backend: FastAPI]
+    B --> C[SQLAlchemy service layer]
+    C --> D[(PostgreSQL)]
+    B --> E[OIDC auth]
+    E --> F[Google / Azure / Keycloak]
+    B --> G[SQLAdmin]
+    B --> H[Audit log]
+    B --> I[Roles & permissions]
+    B --> J[Feature flags & settings]
+```
 
-- What the goal is.
-- What not to touch.
-- What files are relevant.
-- What success means.
-- How to verify the result.
+Core models:
 
-Before coding, the agent should return:
+```text
+User
+ExternalIdentity
+Organization
+Membership
+Role
+Permission
+RolePermission
+UserRole
+AppProject
+AppSetting
+FeatureFlag
+AuditLog
+```
+
+This prevents rebuilding the same authentication, database and admin foundations in every project.
+
+---
+
+## Agents
+
+The `agents/` folder contains operational profiles.
+
+They are not magic bots by themselves. They are role definitions that Codex, Cursor, Claude Code or another coding assistant can be asked to follow.
+
+| Agent | Mission |
+|---|---|
+| `architect` | Define the smallest viable technical approach |
+| `backend` | Implement FastAPI, SQLAlchemy, services and tests |
+| `frontend` | Implement React, routes, forms and UI states |
+| `auth` | Handle OIDC, sessions, users and permissions |
+| `database` | Models, migrations, seeds and constraints |
+| `admin` | SQLAdmin/backoffice functionality |
+| `qa` | Reproduction, tests and verification |
+| `devops` | Docker, env vars, deployment and healthchecks |
+
+Example prompt:
 
 ```md
-## Analysis before implementation
+Read AGENTS.md and agents/backend.md.
 
-### Objective understood
+Act as the backend agent.
 
-### Assumptions
-
-### Risks
-
-### Minimal plan
-
-### Files to touch
-
-### Acceptance criteria
-```
-
-After coding, the agent should return:
-
-```md
-## Verification
-
-- [ ] Backend tests
-- [ ] Frontend build
-- [ ] Migrations applied
-- [ ] Docker compose checked
-- [ ] Manual test
-- [ ] Secrets reviewed
-- [ ] Risks documented
+Implement issue #12 with surgical changes.
+Before coding, return objective, assumptions, plan, files to touch and acceptance criteria.
 ```
 
 ---
 
-## Token and context optimization
+## Skills
 
-One of the biggest improvements in my workflow is not giving the full repo to the model unless necessary.
+The `skills/` folder contains reusable task recipes.
 
-```text
-Level 0: Issue + exact files
-Level 1: Repo tree + relevant files
-Level 2: Full module
-Level 3: Compressed repo
-Level 4: Full repo
+| Skill | Use when |
+|---|---|
+| `create-feature` | Building an end-to-end feature |
+| `create-crud-module` | Adding a model + API + admin view |
+| `add-oidc-provider` | Adding Google, Azure, Keycloak or another provider |
+| `add-admin-view` | Exposing a model in SQLAdmin |
+| `debug-bug` | Fixing a reproducible bug |
+| `review-pr` | Reviewing an AI-generated PR |
+| `prepare-deploy` | Preparing Docker/VPS deployment |
+
+Example prompt:
+
+```md
+Read AGENTS.md and skills/create-crud-module.md.
+
+Create a CRUD module for `Customer`.
+
+Acceptance criteria:
+- SQLAlchemy model.
+- Alembic migration.
+- Pydantic schemas.
+- Repository.
+- Service.
+- Router.
+- SQLAdmin view.
+- Tests.
 ```
 
-Most tasks should happen at levels 0–2.
+---
 
-### Repomix
+## Token optimization
+
+The rule:
+
+> Never send the full repo if a module or diff is enough.
+
+```mermaid
+flowchart TD
+    A[Need AI help] --> B{Task size?}
+    B -->|Small bug| C[Issue + exact files]
+    B -->|Feature| D[Relevant module]
+    B -->|Architecture| E[Repo tree + key docs]
+    B -->|Review| F[Diff only]
+    B -->|Onboarding| G[Compressed repo]
+```
+
+Recommended context levels:
+
+| Level | Context | Use case |
+|---|---|---|
+| 0 | Issue + exact files | Small bugs |
+| 1 | Repo tree + relevant files | Normal feature |
+| 2 | Full module | Medium feature |
+| 3 | Compressed repo | Architecture review |
+| 4 | Full repo | Last resort |
+
+Useful commands:
 
 ```bash
 npx repomix@latest --compress
@@ -278,96 +315,165 @@ npx repomix@latest --include-diffs
 npx repomix@latest --include "backend/app/**/*.py,frontend/src/**/*.tsx"
 ```
 
-### Gitingest
+---
 
-```bash
-pipx install gitingest
-gitingest /path/to/repo
-gitingest https://github.com/user/repo
+## Issue-first development
+
+A good issue is the interface between product thinking and AI execution.
+
+### Feature issue
+
+```md
+## Objective
+
+## Context
+
+## What not to touch
+
+## Backend changes
+
+## Frontend changes
+
+## Database changes
+
+## Permissions
+
+## Acceptance criteria
+
+- [ ]
+
+## Verification
+
+- [ ] Backend tests
+- [ ] Frontend build
+- [ ] Migrations
+- [ ] Manual test
+```
+
+### Bug issue
+
+```md
+## Symptom
+
+## Steps to reproduce
+
+## Expected result
+
+## Actual result
+
+## Logs
+
+## What not to touch
+
+## Acceptance criteria
+
+- [ ] Bug reproduced
+- [ ] Root cause explained
+- [ ] Minimal fix applied
+- [ ] Test added or justification provided
 ```
 
 ---
 
-## Repository structure
+## Learning process
+
+This methodology came from building, breaking, debugging and repeating.
+
+```mermaid
+timeline
+    title Learning path
+    Manual prototypes : React apps : Python scripts : APIs
+    Repetition appears : Auth : Users : DB : Admin : Docker
+    AI coding starts : Fast implementation : Context problems : Big diffs
+    Issue-first workflow : Better prompts : Smaller PRs : Acceptance criteria
+    Repo-level rules : AGENTS.md : CODEX.md : Cursor rules
+    Context discipline : Repomix : Gitingest : Diffs over full repo
+    Framework mindset : Reusable starter : Agents : Skills : Templates
+```
+
+The biggest learning:
+
+> AI does not remove the need for engineering judgment. It increases the value of clear specs, constraints and verification.
+
+---
+
+## Repository map
 
 ```text
 .
-├── README.md
 ├── AGENTS.md
 ├── CODEX.md
 ├── repomix.config.json
 ├── docs/
+│   ├── AI_DEV_OPERATING_SYSTEM.md
+│   ├── app-starter-framework.md
+│   ├── workflow.md
+│   ├── stack.md
+│   ├── learning-process.md
+│   └── token-optimization.md
 ├── agents/
 ├── skills/
 ├── templates/
-└── .github/
+├── .github/
+└── .cursor/
 ```
 
 ---
 
-## My learning process
+## How to use this framework
 
-This methodology comes from learning by building, not from reading a single playbook.
+### In a new project
 
-### 1. Build small things manually
+1. Copy `AGENTS.md`.
+2. Copy `CODEX.md`.
+3. Copy `repomix.config.json`.
+4. Copy `.github/` templates.
+5. Add project-specific rules.
+6. Work through issues.
 
-I started by building small tools and prototypes directly: React apps, Flask/FastAPI backends, scripts, scrapers, dashboards and Docker Compose stacks.
+### In an existing project
 
-### 2. Repeat the same foundations too many times
+1. Add `AGENTS.md`.
+2. Add a short project-specific `CODEX.md`.
+3. Add issue/PR templates.
+4. Add Repomix config.
+5. Start enforcing small PRs.
 
-Authentication, users, admin screens, database setup, deployments and environment variables kept appearing again and again. That repetition showed that the bottleneck was not coding. The bottleneck was lack of reusable structure.
+### With Codex
 
-### 3. Move from “asking for code” to “designing issues”
+```md
+Read AGENTS.md and CODEX.md.
 
-The biggest shift was realizing that AI tools work better when the task is shaped properly.
+Implement the current issue.
 
-Instead of asking:
+Before coding:
+1. Objective understood.
+2. Assumptions.
+3. Risks.
+4. Minimal plan.
+5. Files to touch.
+6. Acceptance criteria.
 
-```text
-Build this feature.
-```
-
-I moved toward:
-
-```text
-Here is the objective, context, constraints, files, acceptance criteria and verification checklist.
-```
-
-### 4. Create reusable agent instructions
-
-`AGENTS.md`, `CODEX.md`, `CLAUDE.md` and Cursor rules became a way to avoid re-explaining how I want software to be built.
-
-### 5. Optimize context
-
-Repomix, Gitingest, diffs, file selection and token counting make the workflow more controlled.
-
-### 6. Productize the workflow
-
-The final step is turning the methodology itself into a reusable asset: for my own projects, for collaborators, for public visibility, and for explaining how I build software with AI.
-
----
-
-## Recommended workflow
-
-```text
-Idea in rough notes
-   ↓
-Convert to GitHub issue
-   ↓
-Define acceptance criteria
-   ↓
-Assign agent / skill
-   ↓
-Implement in branch
-   ↓
-Open PR
+After coding:
+1. Summary.
+2. Verification.
+3. Risks.
+4. What was not tested.
 ```
 
 ---
 
-## Status
+## What this is not
 
-This is a living framework. It will evolve as I keep building real software projects and refining the way I work with AI-assisted development.
+This is not:
+
+- A replacement for senior review.
+- A magic agent framework.
+- A full enterprise architecture.
+- A reason to skip tests.
+- A collection of prompts without process.
+
+It is a practical way to make AI-assisted development repeatable.
 
 ---
 
@@ -377,3 +483,9 @@ This is a living framework. It will evolve as I keep building real software proj
 Technical Product / Data / AI / Software Builder
 
 GitHub: `@mazapander`
+
+---
+
+<p align="center">
+  <b>Build fast. Keep control. Make the work reviewable.</b>
+</p>
