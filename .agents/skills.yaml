@@ -1,0 +1,27 @@
+version: 1
+policy:
+  prefer_specialized_skill: true
+  prefer_existing_module: true
+  prefer_symbol_search: true
+  prefer_compressed_context: true
+  full_repository_requires_justification: true
+
+optional_tools:
+  ponytail:
+    purpose: reduce unnecessary code and reuse existing solutions
+    required: false
+    activation: coding and review tasks when installed
+  repomix:
+    purpose: compress repository context and inspect token-heavy trees
+    required: false
+    commands:
+      - npx repomix@latest --compress
+      - npx repomix@latest --include-diffs
+      - npx repomix@latest --token-count-tree 100
+
+selection_rules:
+  - use installed skills before recreating their workflow manually
+  - load only one implementation role unless specialist consultation is necessary
+  - prefer repository-local modules over newly generated boilerplate
+  - do not invoke a tool merely because it exists; it must reduce risk, context or repeated work
+  - document unavailable or skipped verification instead of fabricating results
