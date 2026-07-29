@@ -10,7 +10,7 @@ if [[ "$SOURCE_DIR" == "$TARGET_DIR" ]]; then
   exit 1
 fi
 
-mkdir -p "$TARGET_DIR/.agents"
+mkdir -p "$TARGET_DIR/.agents" "$TARGET_DIR/scripts"
 
 copy_path() {
   local source="$1"
@@ -30,6 +30,8 @@ copy_path "$SOURCE_DIR/.agents/registry.yaml" "$TARGET_DIR/.agents/registry.yaml
 copy_path "$SOURCE_DIR/.agents/roles" "$TARGET_DIR/.agents/roles"
 copy_path "$SOURCE_DIR/.agents/workflows" "$TARGET_DIR/.agents/workflows"
 copy_path "$SOURCE_DIR/.codex" "$TARGET_DIR/.codex"
+copy_path "$SOURCE_DIR/scripts/validate-agent-framework.sh" "$TARGET_DIR/scripts/validate-agent-framework.sh"
+chmod +x "$TARGET_DIR/scripts/validate-agent-framework.sh"
 
 project_name="$(basename "$TARGET_DIR" | tr '[:upper:]' '[:lower:]' | tr -cs 'a-z0-9_-' '-')"
 backend="none"
@@ -109,6 +111,6 @@ Detected migrations: $migrations
 
 Next steps:
 1. Review .agents/project.yaml.
-2. Run scripts/apply-module.sh from the framework source when a reusable module is needed.
-3. Run scripts/validate-agent-framework.sh inside the target repository.
+2. Apply optional modules from the framework source with scripts/apply-module.sh.
+3. Run ./scripts/validate-agent-framework.sh in the target repository.
 EOF
