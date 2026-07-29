@@ -27,6 +27,8 @@ copy_path "$SOURCE_DIR/AGENTS.md" "$TARGET_DIR/AGENTS.md"
 copy_path "$SOURCE_DIR/CODEX.md" "$TARGET_DIR/CODEX.md"
 copy_path "$SOURCE_DIR/.agents/README.md" "$TARGET_DIR/.agents/README.md"
 copy_path "$SOURCE_DIR/.agents/registry.yaml" "$TARGET_DIR/.agents/registry.yaml"
+copy_path "$SOURCE_DIR/.agents/skills.yaml" "$TARGET_DIR/.agents/skills.yaml"
+copy_path "$SOURCE_DIR/.agents/context-policy.md" "$TARGET_DIR/.agents/context-policy.md"
 copy_path "$SOURCE_DIR/.agents/roles" "$TARGET_DIR/.agents/roles"
 copy_path "$SOURCE_DIR/.agents/workflows" "$TARGET_DIR/.agents/workflows"
 copy_path "$SOURCE_DIR/.codex" "$TARGET_DIR/.codex"
@@ -85,6 +87,13 @@ modules:
   auth: none
   docker: detected
 
+context:
+  prefer_skills: true
+  prefer_existing_modules: true
+  prefer_compressed_context: true
+  full_repository_requires_justification: true
+  optional_reduction_tool: ponytail
+
 boundaries:
   protected_paths: [.env, secrets/]
   generated_paths: []
@@ -111,6 +120,7 @@ Detected migrations: $migrations
 
 Next steps:
 1. Review .agents/project.yaml.
-2. Apply optional modules from the framework source with scripts/apply-module.sh.
-3. Run ./scripts/validate-agent-framework.sh in the target repository.
+2. Review .agents/skills.yaml and .agents/context-policy.md.
+3. Apply optional modules from the framework source with scripts/apply-module.sh.
+4. Run ./scripts/validate-agent-framework.sh in the target repository.
 EOF
