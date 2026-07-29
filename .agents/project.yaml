@@ -10,15 +10,18 @@ stack:
   database: PostgreSQL
   migrations: Alembic
   infrastructure: Docker Compose
+  package_manager: unknown
 
 commands:
   install: ""
+  create_venv: "python3 -m venv .venv"
   test_backend: ""
   test_frontend: ""
   lint: ""
   build: ""
   migrate: ""
   run: ""
+  deploy: "bash deploy/deploy.sh"
 
 modules:
   auth:
@@ -29,10 +32,20 @@ modules:
     outcomes: [APPLIED, SKIPPED_EQUAL, CONFLICT]
   docker:
     convention: compose-project-services
+  observability:
+    structured_logs: optional
+    request_id: X-Request-ID
+  audit:
+    durable_events: optional
+  deployment:
+    contract: optional
+    mode: manual-vps
 
 boundaries:
   protected_paths:
     - .env
+    - .venv/
+    - deploy/deploy.env
     - secrets/
   generated_paths: []
   do_not_change_without_request:
@@ -46,3 +59,5 @@ quality_gates:
   require_env_example_for_new_variables: true
   require_documented_unverified_items: true
   fail_on_schema_conflict: true
+  require_healthcheck_after_deploy: true
+  require_structured_logs: true
