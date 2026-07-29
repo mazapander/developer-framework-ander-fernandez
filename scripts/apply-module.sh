@@ -6,7 +6,7 @@ MODULE="${1:-}"
 TARGET_DIR="${2:-$PWD}"
 
 if [[ -z "$MODULE" ]]; then
-  echo "Usage: $0 <supabase-auth|docker> [target-repository]"
+  echo "Usage: $0 <supabase-auth|docker|alembic-resilient> [target-repository]"
   exit 1
 fi
 
@@ -26,6 +26,18 @@ else
   cp -R "$MODULE_DIR" "$TARGET_DIR/.agents/modules/$MODULE"
 fi
 
+copy_if_missing() {
+  local source="$1"
+  local target="$2"
+  mkdir -p "$(dirname "$target")"
+  if [[ -f "$target" ]]; then
+    echo "Preserved existing: ${target#$TARGET_DIR/}"
+  else
+    cp "$source" "$target"
+    echo "Created: ${target#$TARGET_DIR/}"
+  fi
+}
+
 case "$MODULE" in
   supabase-auth)
     if [[ -d "$TARGET_DIR/frontend" ]]; then
@@ -33,20 +45,25 @@ case "$MODULE" in
     else
       frontend_dir="$TARGET_DIR"
     fi
-    mkdir -p "$frontend_dir/src/lib"
-    if [[ ! -f "$frontend_dir/src/lib/supabase.ts" ]]; then
-      cp "$MODULE_DIR/templates/supabase.ts" "$frontend_dir/src/lib/supabase.ts"
-      echo "Created: ${frontend_dir#$TARGET_DIR/}/src/lib/supabase.ts"
-    fi
+
+    copy_if_missing "$MODULE_DIR/templates/supabase.ts" "$frontend_dir/src/lib/supabase.ts"
+    copy_if_missing "$MODULE_DIR/templates/LoginPage.tsx" "$frontend_dir/src/features/auth/LoginPage.tsx"
+    copy_if_missing "$MODULE_DIR/templates/ForgotPasswordPage.tsx" "$frontend_dir/src/features/auth/ForgotPasswordPage.tsx"
+    copy_if_missing "$MODULE_DIR/templates/ResetPasswordPage.tsx" "$frontend_dir/src/features/auth/ResetPasswordPage.tsx"
+
     if [[ ! -f "$TARGET_DIR/.env.example" ]]; then
       cp "$MODULE_DIR/templates/env.example" "$TARGET_DIR/.env.example"
+      echo "Created: .env.example"
     else
       while IFS= read -r line; do
+        [[ -z "$line" ]] && continue
         key="${line%%=*}"
         grep -q "^${key}=" "$TARGET_DIR/.env.example" || echo "$line" >> "$TARGET_DIR/.env.example"
       done < "$MODULE_DIR/templates/env.example"
     fi
-    echo "Install @supabase/supabase-js with the repository's detected package manager."
+
+    echo "Install @supabase/supabase-js and react-router-dom with the detected package manager."
+    echo "Wire /login, /forgot-password and /reset-password into the existing router and design system."
     ;;
   docker)
     if [[ ! -f "$TARGET_DIR/compose.yaml" && ! -f "$TARGET_DIR/compose.yml" && ! -f "$TARGET_DIR/docker-compose.yml" ]]; then
@@ -55,8 +72,19 @@ case "$MODULE" in
     else
       echo "Existing Compose file preserved. Use the module guide to align it manually."
     fi
-    [[ -f "$TARGET_DIR/backend/Dockerfile" ]] || { mkdir -p "$TARGET_DIR/backend"; cp "$MODULE_DIR/templates/backend.Dockerfile" "$TARGET_DIR/backend/Dockerfile"; }
-    [[ -f "$TARGET_DIR/frontend/Dockerfile" ]] || { mkdir -p "$TARGET_DIR/frontend"; cp "$MODULE_DIR/templates/frontend.Dockerfile" "$TARGET_DIR/frontend/Dockerfile"; }
+    copy_if_missing "$MODULE_DIR/templates/backend.Dockerfile" "$TARGET_DIR/backend/Dockerfile"
+    copy_if_missing "$MODULE_DIR/templates/frontend.Dockerfile" "$TARGET_DIR/frontend/Dockerfile"
+    ;;
+  alembic-resilient)
+    if [[ -d "$TARGET_DIR/backend/app" ]]; then
+      migration_utils_dir="$TARGET_DIR/backend/app/db/migrations"
+    elif [[ -d "$TARGET_DIR/app" ]]; then
+      migration_utils_dir="$TARGET_DIR/app/db/migrations"
+    else
+      migration_utils_dir="$TARGET_DIR/backend/app/db/migrations"
+    fi
+    copy_if_missing "$MODULE_DIR/templates/schema_guard.py" "$migration_utils_dir/schema_guard.py"
+    echo "Import schema_guard helpers explicitly from new revisions; existing revisions are never rewritten automatically."
     ;;
 esac
 
