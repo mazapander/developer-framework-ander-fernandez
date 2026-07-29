@@ -16,12 +16,25 @@ backend/
 │   ├── db/base.py
 │   ├── db/session.py
 │   ├── dependencies/
+│   ├── middleware/
 │   ├── models/
 │   ├── schemas/
 │   └── services/
 ├── tests/
 └── pyproject.toml
 ```
+
+## Python virtual environment
+
+Applying this module creates a repository-root `.venv` using `python -m venv` when it does not already exist. It also ensures `.venv/` is ignored by Git.
+
+```bash
+source .venv/bin/activate
+# Windows PowerShell
+.venv\Scripts\Activate.ps1
+```
+
+The environment starts empty. Dependencies must come from the project's declared dependency file instead of hidden installer assumptions.
 
 ## Contract
 
