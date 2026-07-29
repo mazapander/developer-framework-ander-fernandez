@@ -6,7 +6,7 @@ MODULE="${1:-}"
 TARGET_DIR="${2:-$PWD}"
 
 if [[ -z "$MODULE" ]]; then
-  echo "Usage: $0 <fastapi-base|supabase-auth|backend-supabase-jwt|testing-base|alembic-resilient|docker> [target-repository]"
+  echo "Usage: $0 <fastapi-base|supabase-auth|backend-supabase-jwt|testing-base|alembic-resilient|docker|observability-audit|deployment-contract|deploy-vps> [target-repository]"
   exit 1
 fi
 
@@ -52,6 +52,7 @@ app_dir="$backend_root/app"
 
 case "$MODULE" in
   fastapi-base)
+    bash "$SOURCE_DIR/scripts/create-venv.sh" "$TARGET_DIR"
     copy_if_missing "$MODULE_DIR/templates/main.py" "$app_dir/main.py"
     copy_if_missing "$MODULE_DIR/templates/config.py" "$app_dir/core/config.py"
     copy_if_missing "$MODULE_DIR/templates/router.py" "$app_dir/api/router.py"
@@ -98,6 +99,22 @@ case "$MODULE" in
     fi
     copy_if_missing "$MODULE_DIR/templates/backend.Dockerfile" "$TARGET_DIR/backend/Dockerfile"
     copy_if_missing "$MODULE_DIR/templates/frontend.Dockerfile" "$TARGET_DIR/frontend/Dockerfile"
+    ;;
+  observability-audit)
+    copy_if_missing "$MODULE_DIR/templates/logging.py" "$app_dir/core/logging.py"
+    copy_if_missing "$MODULE_DIR/templates/request_context.py" "$app_dir/middleware/request_context.py"
+    copy_if_missing "$MODULE_DIR/templates/audit_log.py" "$app_dir/models/audit_log.py"
+    copy_if_missing "$MODULE_DIR/templates/audit.py" "$app_dir/services/audit.py"
+    echo "Integrate middleware/startup and create a resilient Alembic migration for audit_log."
+    ;;
+  deployment-contract)
+    copy_if_missing "$MODULE_DIR/templates/deploy.env.example" "$TARGET_DIR/deploy/deploy.env.example"
+    touch "$TARGET_DIR/.gitignore"
+    grep -qxF 'deploy/deploy.env' "$TARGET_DIR/.gitignore" || printf '\ndeploy/deploy.env\n' >> "$TARGET_DIR/.gitignore"
+    ;;
+  deploy-vps)
+    copy_if_missing "$MODULE_DIR/templates/deploy.sh" "$TARGET_DIR/deploy/deploy.sh"
+    echo "Create deploy/deploy.env on the VPS and make deploy/deploy.sh executable."
     ;;
 esac
 
