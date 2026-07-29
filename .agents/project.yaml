@@ -1,0 +1,37 @@
+version: 1
+project:
+  name: replace-me
+  objective: replace-me
+  status: discovery
+
+stack:
+  backend: FastAPI
+  frontend: React + Vite + TypeScript
+  database: PostgreSQL
+  migrations: Alembic
+  infrastructure: Docker Compose
+
+commands:
+  install: ""
+  test_backend: ""
+  test_frontend: ""
+  lint: ""
+  build: ""
+  migrate: ""
+  run: ""
+
+boundaries:
+  protected_paths:
+    - .env
+    - secrets/
+  generated_paths: []
+  do_not_change_without_request:
+    - authentication
+    - database schema
+    - deployment configuration
+
+quality_gates:
+  require_tests_for_logic_changes: true
+  require_migration_for_schema_changes: true
+  require_env_example_for_new_variables: true
+  require_documented_unverified_items: true
