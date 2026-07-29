@@ -7,6 +7,8 @@ required=(
   ".agents/README.md"
   ".agents/registry.yaml"
   ".agents/project.yaml"
+  ".agents/skills.yaml"
+  ".agents/context-policy.md"
   ".codex/README.md"
 )
 
@@ -23,6 +25,11 @@ done
 if grep -RInE '(api[_-]?key|secret|password|token)[[:space:]]*[:=][[:space:]]*[^$<{[:space:]]+' \
   "$root/.agents" "$root/.codex" 2>/dev/null; then
   printf 'warning: review possible hard-coded credentials above\n' >&2
+  failed=1
+fi
+
+if ! grep -q 'prefer_specialized_skill: true' "$root/.agents/skills.yaml" 2>/dev/null; then
+  printf 'warning: specialized-skill preference is not enabled\n' >&2
   failed=1
 fi
 
