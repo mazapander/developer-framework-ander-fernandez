@@ -20,6 +20,16 @@ commands:
   migrate: ""
   run: ""
 
+modules:
+  auth:
+    provider: none
+    frontend_flow: standard-password
+  migrations:
+    strategy: resilient-alembic
+    outcomes: [APPLIED, SKIPPED_EQUAL, CONFLICT]
+  docker:
+    convention: compose-project-services
+
 boundaries:
   protected_paths:
     - .env
@@ -35,3 +45,4 @@ quality_gates:
   require_migration_for_schema_changes: true
   require_env_example_for_new_variables: true
   require_documented_unverified_items: true
+  fail_on_schema_conflict: true
