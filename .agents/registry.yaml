@@ -1,0 +1,41 @@
+version: 1
+source_of_truth: AGENTS.md
+
+roles:
+  architect:
+    file: roles/architect.md
+    use_for: [architecture, decomposition, technical-decisions]
+  backend:
+    file: roles/backend.md
+    use_for: [fastapi, python, sqlalchemy, api, services]
+  frontend:
+    file: roles/frontend.md
+    use_for: [react, vite, typescript, ui]
+  data:
+    file: roles/data.md
+    use_for: [postgresql, alembic, ingestion, analytics, data-quality]
+  qa:
+    file: roles/qa.md
+    use_for: [testing, reproduction, verification, review]
+  devops:
+    file: roles/devops.md
+    use_for: [docker, deployment, ci, observability]
+  security:
+    file: roles/security.md
+    use_for: [auth, permissions, secrets, threat-review]
+
+workflows:
+  feature:
+    file: workflows/feature.md
+  bugfix:
+    file: workflows/bugfix.md
+  review:
+    file: workflows/review.md
+  bootstrap:
+    file: workflows/bootstrap-project.md
+
+selection_rules:
+  - Select exactly one primary role before implementation.
+  - Add a workflow only when it provides useful gates for the task.
+  - Prefer the smallest context set that can prove the change correct.
+  - Never let a tool-specific adapter override AGENTS.md.
